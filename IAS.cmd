@@ -521,11 +521,11 @@ echo You can download it from  https://www.internetdownloadmanager.com/download.
 goto done
 )
 
+// Prevent IDM purchasing window
+reg add "HKCU\Software\DownloadManager" /v "CheckUpdtVM" /t REG_DWORD /d "0" /f %nul%
+reg add "HKCU\Software\DownloadManager" /v "CheckUpdtVMInterval" /t REG_DWORD /d "0" /f %nul%
+
 :: Internet check with internetdownloadmanager.com ping and port 80 test
-
-set _int=
-for /f "delims=[] tokens=2" %%# in ('ping -n 1 internetdownloadmanager.com') do (if not [%%#]==[] set _int=1)
-
 if not defined _int (
 %psc% "$t = New-Object Net.Sockets.TcpClient;try{$t.Connect("""internetdownloadmanager.com""", 80)}catch{};$t.Connected" | findstr /i "true" %nul1% || (
 call :_color %Red% "Unable to connect internetdownloadmanager.com, aborting..."
